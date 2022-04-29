@@ -1,0 +1,2 @@
+imu_calib:lino_msgs:lino_pid:lino_udev:lino_visualize:linorobot:pocketsphinx:rplidar_ros
+-DCATKIN_DEVEL_PREFIX=/home/milabpi4/linorobot_ws/devel -DCMAKE_INSTALL_PREFIX=/home/milabpi4/linorobot_ws/install -G Unix Makefiles

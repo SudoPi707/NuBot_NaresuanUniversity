@@ -1,0 +1,8 @@
+index,command,x,y
+1,go to docking station,-3.75,-0.3
+2,go to kitchen,-3.75,2.25
+3,go to bathroom,-1.1,2.5
+4,go to bedroom a,1.75,2.6
+5,go to bedroom b,3.5,-2.3
+6,go to living room,1,-2.6
+7,go to storage room,-3.35,-2.8

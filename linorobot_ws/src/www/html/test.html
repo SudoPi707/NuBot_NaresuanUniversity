@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created for sending ros meassage"
+    />
+    <link rel="stylesheet" href="./include/bootstrap.min.css" />
+    <script type="text/javascript" src="./include/roslib.min.js"></script>
+
+    <script type="text/javascript" src="./include/vue.js"></script>
+    <script type="text/javascript" src="./include/jquery.min.js"></script>
+    <script type="text/javascript" src="./include/papaparse.js"></script>
+
+    <title>ROS Control Center</title>
+  </head>
+  <body>
+    <div id="app" class="container">
+      <div class="jumbotron">
+        <h1>Hello from ROSDS!</h1>
+      </div>
+      <div class="row" style="max-height: 200px">
+        <div class="col-md-6">
+          <h3>Connection status</h3>
+          <p class="text-danger" v-if="!connected">Not connected!</p>
+          <p class="text-success" v-if="connected">Connected!</p>
+          <label>Websocket server address</label>
+          <input type="text" v-model="ws_address" />
+          <br /><br />
+          <button
+            :disabled="loading"
+            class="btn btn-danger"
+            @click="disconnect"
+            v-if="connected"
+          >
+            Disconnect!
+          </button>
+          <button
+            :disabled="loading"
+            class="btn btn-success"
+            @click="connect"
+            v-else
+          >
+            Connect!
+          </button>
+        </div>
+        <div class="col-md-6" style="max-height: 200px; overflow: auto">
+          <h3>Log messages</h3>
+          <div>
+            <p v-for="log of logs">{{ log }}</p>
+          </div>
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="row">
+        <!-- 1st row -->
+        <h5 class="col-md-12 text-center">Select Index (Position)</h5>
+        <div class="col-md-12 text-center">
+          <div id="table"></div>
+          <br />
+        </div>
+
+        <!-- 2nd row -->
+        <div class="col-md-10 text-center">
+          <button class="btn btn-info btn-lg" onclick="app.send_message(0)">
+            Stop
+          </button>
+          <button class="btn btn-info btn-lg" onclick="app.send_message(1)">
+            1
+          </button>
+          <button class="btn btn-info btn-lg" onclick="app.send_message(2)">
+            2
+          </button>
+          <button class="btn btn-info btn-lg" onclick="app.send_message(3)">
+            3
+          </button>
+          <button class="btn btn-info btn-lg" onclick="app.send_message(4)">
+            4
+          </button>
+          <button class="btn btn-info btn-lg" onclick="app.send_message(5)">
+            5
+          </button>
+          <button class="btn btn-info btn-lg" onclick="app.send_message(6)">
+            6
+          </button>
+          <button class="btn btn-info btn-lg" onclick="app.send_message(7)">
+            7
+          </button>
+          <button class="btn btn-info btn-lg" onclick="app.send_message(8)">
+            8
+          </button>
+          <button class="btn btn-info btn-lg" onclick="app.send_message(9)">
+            9
+          </button>
+          <input type="number" v-model="ws_index_key" />
+          <button
+            @click="send_message"
+            :disabled="loading || !connected"
+            class="btn btn-primary"
+          >
+            Send index
+          </button>
+        </div>
+
+        <!-- 3rd row -->
+        <!-- <div class="col-md-12 text-center"></div> -->
+      </div>
+    </div>
+    <script type="text/javascript">
+      $.ajax({
+        type: "GET",
+        url: "http://localhost/locations.csv",
+        success: function (data) {
+          show_position(Papa.parse(data).data);
+        },
+      });
+
+      function show_position(tableData) {
+        var doc = document;
+        var docFrag = document.createDocumentFragment();
+        var table = doc.createElement("TABLE");
+        table.setAttribute("class", "table");
+
+        var thead = doc.createElement("THEAD");
+        thead.setAttribute("class", "thead-light");
+
+        for (var i = 0; i < tableData[0].length; i++) {
+          var cell = doc.createElement("TH");
+          cell.textContent = tableData[0][i];
+          thead.append(cell);
+        }
+        table.append(thead);
+
+        for (var x = 1; x < tableData.length; x++) {
+          var row = doc.createElement("TR");
+          for (var y = 0; y < tableData[x].length; y++) {
+            var cell = doc.createElement("TD");
+            cell.textContent = tableData[x][y];
+            row.append(cell);
+          }
+          table.append(row);
+        }
+
+        docFrag.appendChild(table);
+        doc.getElementById("table").appendChild(docFrag);
+      }
+      // document.addEventListener("DOMContentLoaded", function (event) {
+      //   var doc = document;
+      //   var docFrag = document.createDocumentFragment();
+
+      //   for (var x = 1; x < results.length; x++) {
+      //     var button = doc.createElement("button");
+      //     button.setAttribute("id", x);
+      //     button.setAttribute("class", "btn btn-info");
+      //     button.setAttribute("onclick", "app.send_message(this.id)");
+      //     button.textContent = results[x][1];
+      //     docFrag.appendChild(button);
+      //   }
+
+      //   doc.getElementById("buttons").appendChild(docFrag);
+      // });
+    </script>
+    <script type="text/javascript" src="./test.js"></script>
+  </body>
+</html>
